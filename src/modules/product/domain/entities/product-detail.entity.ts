@@ -5,17 +5,15 @@ import { Column, Entity, PrimaryColumn } from 'typeorm';
 export class ProductDetail {
 
   @PrimaryColumn()
-  idproducto: number;
+  id: number;
   @Column({ nullable: true })
   nombre?: string;
   @Column({ nullable: true })
-  nombre_detalle?: string;
-  @Column({ nullable: true })
   precio?: number;
   @Column({ nullable: true })
-  idcategoria?: string;
+  idcategoria?: number;
   @Column({ nullable: true })
-  nombre_categoria?: string;
+  categoria?: string;
   @Column({ nullable: true })
   sub_categoria?: string;
   @Column({ nullable: true })
@@ -24,8 +22,6 @@ export class ProductDetail {
   proveedor?: string;
   @Column({ nullable: true })
   descripcion?: string;
-  @Column({ nullable: true })
-  descripcion_general?: string;
   @Column({ nullable: true })
   marca?: string;
   @Column({ nullable: true })

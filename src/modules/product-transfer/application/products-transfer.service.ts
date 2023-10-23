@@ -1,16 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BaseFilterDto } from '../../shared/domain/base-filter.dto';
 import { ViewProduct } from '../domain/entities/product.viewentity';
-import { ProductDetailType, ProductType } from './dto/products.out';
-import { StockProductsType } from './dto/stock.out';
-import { RebajaStockDto } from './dto/rebaja-stock.dto';
-import { EOrderProductBy, ProductFilterDto } from './dto/product.filter';
-import { ProductResponse } from '../domain/dto/viewproduct.dto';
 import { ViewProductDetail } from '../domain/entities/product-detail.viewentity';
-import { Product } from '../../product/domain/entities/produc.entity';
+import { Product } from '../../product/domain/entities/product.entity';
 import { ProductDetail } from '../../product/domain/entities/product-detail.entity';
+import { StockGc } from '../../product/domain/entities/stock-gc.entity';
+import { ConfigService } from '@nestjs/config';
 
 
 @Injectable()
@@ -20,43 +16,72 @@ export class ProductsTransferService {
     private readonly productViewRepository: Repository<ViewProduct>,
     @InjectRepository(ViewProductDetail, "mysqlConnection")
     private readonly productDetailViewRepository: Repository<ViewProductDetail>,
-
     @InjectRepository(Product, "postgresConnection")
     private readonly productRepository: Repository<Product>,
     @InjectRepository(ProductDetail, "postgresConnection")
     private readonly productDetailRepository: Repository<ProductDetail>,
+    @InjectRepository(StockGc, "postgresConnection")
+    private readonly stockGcRepository: Repository<StockGc>,
+    private readonly configService: ConfigService
 
   ) { }
 
+  async resetStock(): Promise<any> {
+    // configService obtener el host
+    // solo usar este metodo para el ambiente DEV o local
+    if (this.configService.get<string>("NODE_ENV") === "local"){
+      await this.stockGcRepository.update({}, { rut_cliente: null })
+      const stock = await this.stockGcRepository
+        .createQueryBuilder("stock")
+        .select("stock.id_producto", "id_producto")
+        .addSelect("COUNT(*)", "count")
+        .where("stock.rut_cliente IS NULL")
+        .groupBy("stock.id_producto")
+        .getRawMany();
+  
+      await this.productRepository.update({}, { stock: 0 })
+      await this.productDetailRepository.update({}, { stock: 0 })
+  
+      for (const row of stock) {
+        const { id_producto, count } = row;
+        await this.productRepository.update({ id: id_producto }, { stock: count });
+        await this.productDetailRepository.update({ id: id_producto }, { stock: count });
+      }
+  
+      return stock
+
+    }else{
+      return "Solo se debe hacer en dev"
+    }   
+  }
 
   async productSync(): Promise<any> {
     //const { page, pageSize } = baseFilterDto
     const products = await this.productViewRepository.find()
 
-    for(const product of products){
-    
-      const productExist  = await this.productRepository.findOneBy({
-        id: product.id
+    for (const productView of products) {
+
+      const productExist = await this.productRepository.findOneBy({
+        id: productView.id
       })
-      console.log("🚀 ~ file: products-transfer.service.ts:41 ~ ProductsTransferService ~ productSync ~ productExist:", productExist)
 
       if (productExist) {
         // Si el producto existe, actualízalo
-        productExist.nombre = product.nombre
-        productExist.nombre_detalle = product.nombreDetalle
-        productExist.precio = product.precio
-        productExist.idcategoria = product.idCategoria
-        productExist.categoria = product.categoria
-        productExist.stock = product.stock
-        productExist.proveedor = product.proveedor
-        productExist.marca = product.marca
-        productExist.posicion = product.posicion
-        productExist.thumbnail = product.thumbnail
+        productExist.nombre = productView.nombre
+        productExist.descripcion = productView.descripcion
+        productExist.precio = productView.precio
+        productExist.idcategoria = productView.idcategoria
+        productExist.categoria = productView.categoria
+        productExist.stock = productView.stock
+        productExist.proveedor = productView.proveedor
+        productExist.marca = productView.marca
+        productExist.posicion = productView.posicion
+        productExist.thumbnail = productView.thumbnail
         await this.productRepository.save(productExist);
 
       } else {
         // Si el producto no existe, créalo
-        await this.productRepository.save(product);
+        await this.productRepository.save(productView);
       }
 
     }
@@ -74,25 +99,24 @@ export class ProductsTransferService {
     //const { page, pageSize } = baseFilterDto
     const products = await this.productDetailViewRepository.find()
 
-    for(const product of products){
-      
+    for (const product of products) {
 
-      const productExist  = await this.productDetailRepository.findOneBy({
-        idproducto: product.idproducto
+
+      const productExist = await this.productDetailRepository.findOneBy({
+        id: product.id
       })
 
       if (productExist) {
 
         productExist.nombre = product.nombre
-        productExist.nombre_detalle = product.nombre_detalle
+
         productExist.precio = product.precio
-        productExist.idcategoria = product.idcategoria
-        productExist.nombre_categoria = product.nombre_categoria
+        productExist.idcategoria = +product.idcategoria
+        productExist.categoria = product.nombre_categoria
         productExist.sub_categoria = product.sub_categoria
         productExist.stock = product.stock
         productExist.proveedor = product.proveedor
         productExist.descripcion = product.descripcion
-        productExist.descripcion_general = product.descripcion_general
         productExist.marca = product.marca
         productExist.thumbnail = product.thumbnail
         productExist.pesoNormal = product.pesoNormal
@@ -105,7 +129,7 @@ export class ProductsTransferService {
         productExist.genero = product.genero
 
         await this.productDetailRepository.save(productExist);
-      }else{
+      } else {
         await this.productDetailRepository.save(product);
       }
 

@@ -35,13 +35,13 @@ $ npm install
 ## Running the app
 
 ```bash
-# development
+# este comando lo correo automanticamente el app engine
 $ npm run start
 
-# watch mode
+# para correr en local a dev
 $ npm run start:dev
 
-# production mode
+# para correr en local a prod
 $ npm run start:prod
 ```
 

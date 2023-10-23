@@ -1,9 +1,13 @@
 // api.guard.ts
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ApiGuard implements CanActivate {
-    private readonly apiKey = '3eec1301-11bf-49b5-a842-3570492e9822';
+    private readonly apiKey = null;
+    constructor(private readonly configService: ConfigService){
+        this.apiKey = this.configService.get('X_API_KEY');
+    }
     
     canActivate(context: ExecutionContext): boolean {
 

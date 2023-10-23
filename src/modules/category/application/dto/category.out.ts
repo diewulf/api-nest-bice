@@ -4,7 +4,7 @@ export type CategoryType = {
 };
   
   export const categoryDummy: CategoryType[] = [
-    { idcategoria: 1979	, categoria: "Gift Card Cencosud"},
+    { idcategoria: 1979	, categoria: "Gift Card"},
   ];
 
 

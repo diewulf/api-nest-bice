@@ -35,10 +35,18 @@ export class StockGc {
 
   @Column({ type: 'text', nullable: true })
   url_cupon?: string;
+
+  tipo_beneficio: TipoBeneficioEnum;
 }
 
 
 export enum EGc {
   CENCOSUD = "CENCOSUD",
   FALLABELLA = "FALLABELLA"
+}
+
+export enum TipoBeneficioEnum {
+  COPAGO = "COPAGO",
+  EXCLUSIVO = "EXCLUSIVO",
+  ADICIONALES= "ADICIONALES"
 }

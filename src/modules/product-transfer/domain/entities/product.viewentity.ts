@@ -4,17 +4,7 @@ import { ViewColumn, ViewEntity } from 'typeorm';
 @ViewEntity({
   expression: `
     SELECT
-    id,
-    nombre,
-    nombreDetalle,
-    marca,
-    precio,
-    proveedor,
-    stock,
-    posicion,
-    idCategoria,
-    categoria,
-    thumbnail
+    *
     FROM
     BW_productos
     `,
@@ -28,11 +18,11 @@ export class ViewProduct {
   @ViewColumn()
   nombre: string;
   @ViewColumn()
-  nombreDetalle: string;
+  descripcion: string;
   @ViewColumn()
   precio: number;
   @ViewColumn()
-  idCategoria: number;
+  idcategoria: number;
   @ViewColumn()
   categoria: string;
   //subCategoria: string;

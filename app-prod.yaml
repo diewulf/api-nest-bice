@@ -1,0 +1,12 @@
+runtime: nodejs18
+service: bicewellness
+# prettier-ignore
+
+
+env_variables:
+  NODE_ENV: production
+  DB_HOST: /cloudsql/peak-vortex-396916:us-east1:fi-db-postgres-prod
+  
+handlers:
+- url: /.*
+  script: "auto"

@@ -1,4 +1,4 @@
-import { Product } from '../entities/produc.entity';
+import { Product } from '../entities/product.entity';
 
 export class ProductResponse {
   products?: Product[];

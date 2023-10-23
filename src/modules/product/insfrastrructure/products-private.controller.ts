@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post , Body} from '@nestjs/common';
 import { CreateGcInDto } from '../application/dto/create-gc-in.dto';
 import { ProductsPrivateService } from '../application/products-private.service';
 
@@ -11,7 +11,7 @@ export class PrivateProductController {
   
   // inserta stock GC
   @Post()
-  addProducts(@Body() createGcInDto: CreateGcInDto): Promise<any> {
+  async addProducts(@Body() createGcInDto: CreateGcInDto): Promise<any> {
     return this.productsPrivateService.addProduct(createGcInDto)
   }
 

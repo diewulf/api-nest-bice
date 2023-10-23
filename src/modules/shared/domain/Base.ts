@@ -13,4 +13,6 @@ export class Base {
     @Column({ nullable: true })
     createdBy?: string;
 
+    //make column with rut
+
 }

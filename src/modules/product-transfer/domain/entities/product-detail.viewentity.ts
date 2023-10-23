@@ -14,15 +14,13 @@ import { ViewColumn, ViewEntity } from 'typeorm';
 export class ViewProductDetail {
   
   @ViewColumn()
-  idproducto: number;
+  id: number;
   @ViewColumn()
   nombre: string;
   @ViewColumn()
-  nombre_detalle: string;
-  @ViewColumn()
   precio: number;
   @ViewColumn()
-  idcategoria: string;
+  idcategoria: number;
   @ViewColumn()
   nombre_categoria: string;
   @ViewColumn()
@@ -33,8 +31,6 @@ export class ViewProductDetail {
   proveedor: string;
   @ViewColumn()
   descripcion: string;
-  @ViewColumn()
-  descripcion_general: string;
   @ViewColumn()
   marca: string;
   @ViewColumn()

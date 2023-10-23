@@ -1,4 +1,4 @@
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
@@ -10,11 +10,14 @@ import { postgreSqlConfig, mysqlConfig } from './config.database';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ProductTransferMyModule } from './modules/product-transfer/insfrastrructure/products-transfer.module';
+import { PdfController } from './modules/shared/infrastructure/pdf.controller';
+import { PdfService } from './modules/shared/application/pdfhtml.service';
 
+console.log(join(__dirname, '..', 'client'))
 
 let localModule = [];
-
-if (process.env.NODE_ENV === 'dev') {
+console.log(process.env.NODE_ENV)
+if (process.env.NODE_ENV === 'local') {
   // Importar el módulo solo si la aplicación se está ejecutando en localhost
   localModule = [
     ProductTransferMyModule,
@@ -42,7 +45,8 @@ if (process.env.NODE_ENV === 'dev') {
       port: 8000
     }),
     ConfigModule.forRoot({
-      isGlobal: true
+      envFilePath: process.env.NODE_ENV === 'production' ? '.env.prod' : '.env', // .env seria tu local que se conecta al de test
+      isGlobal: true,
     }),
 
     TypeOrmModule.forRootAsync({
@@ -52,7 +56,9 @@ if (process.env.NODE_ENV === 'dev') {
     }),
 
   ],
+  controllers: [PdfController],
+  providers: [PdfService]
 })
 
 
-export class AppModule {}
+export class AppModule { }

@@ -2,11 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { CreateGcInDto } from './dto/create-gc-in.dto';
 import { StockGc } from '../domain/entities/stock-gc.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 
 @Injectable()
 export class ProductsPrivateService {
   constructor(
+    @InjectRepository(StockGc, "postgresConnection")
     private readonly stockGcRepository: Repository<StockGc>,
   ) { }
 
@@ -18,6 +20,7 @@ export class ProductsPrivateService {
       id_producto,
       tipo_gc
     } = createGcInDto
+      
 
     const stock = this.stockGcRepository.create({
       clave,

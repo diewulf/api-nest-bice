@@ -8,14 +8,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Redeem } from '../domain/redeem.entity';
 import { StockService } from '../../product/application/stock.service';
 import { StockGc } from '../../product/domain/entities/stock-gc.entity';
-import { Product } from '../../product/domain/entities/produc.entity';
+import { Product } from '../../product/domain/entities/product.entity';
 import { RedeemCreate } from '../application/redem-create';
+import { ProductService } from '../../product/application/products.service';
+import { ProductDetail } from '../../product/domain/entities/product-detail.entity';
 
 
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Redeem, StockGc, Product], "postgresConnection"),
+    TypeOrmModule.forFeature([Redeem, StockGc, Product, ProductDetail], "postgresConnection"),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
@@ -26,6 +28,11 @@ import { RedeemCreate } from '../application/redem-create';
   ],
 
   controllers: [RedeemController],
-  providers: [RedeemService, StockService, RedeemCreate],
+  providers: [
+    RedeemService,
+    StockService,
+    RedeemCreate,
+    ProductService
+  ],
 })
 export class RedeemModule { }

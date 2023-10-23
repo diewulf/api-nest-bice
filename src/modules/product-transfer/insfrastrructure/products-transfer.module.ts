@@ -5,8 +5,9 @@ import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ViewProduct } from '../domain/entities/product.viewentity';
 import { ViewProductDetail } from '../domain/entities/product-detail.viewentity';
-import { Product } from '../../product/domain/entities/produc.entity';
+import { Product } from '../../product/domain/entities/product.entity';
 import { ProductDetail } from '../../product/domain/entities/product-detail.entity';
+import { StockGc } from '../../product/domain/entities/stock-gc.entity';
 
 
 // este modulo es para correr en local, es para transferir todo de MC a bicewellness postgres
@@ -14,7 +15,7 @@ import { ProductDetail } from '../../product/domain/entities/product-detail.enti
 @Module({
   imports: [
     TypeOrmModule.forFeature([ViewProduct, ViewProductDetail] , 'mysqlConnection'),
-    TypeOrmModule.forFeature([Product, ProductDetail] , 'postgresConnection'),
+    TypeOrmModule.forFeature([Product, ProductDetail, StockGc] , 'postgresConnection'),
   ],
   providers: [ProductsTransferService],
   controllers: [ProductsTransferController],

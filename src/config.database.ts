@@ -11,8 +11,7 @@ export const postgreSqlConfig = async (): Promise<TypeOrmModuleOptions> => {
     password: configService.get('DB_PASSWORD'),
     database: configService.get('DB_NAME'),
     entities: [__dirname + '/**/*.entity{.ts,.js}'],
-    /* logging: true, */
-    synchronize: true,
+    synchronize:  true,
     autoLoadEntities: true,
   };
 };
