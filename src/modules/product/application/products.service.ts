@@ -1,23 +1,22 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BaseFilterDto } from '../../shared/domain/base-filter.dto';
-
-import { ProductDetailType, ProductType } from './dto/products.out';
 import { StockProductsType } from './dto/stock.out';
 import { stockDummy } from '../domain/dummies/stock.dummy';
 import { RebajaStockDto } from './dto/rebaja-stock.dto';
 import { EOrderProductBy, ProductFilterDto } from './dto/product.filter';
-import { CreateGcInDto } from './dto/create-gc-in.dto';
 import { StockGc } from '../domain/entities/stock-gc.entity';
-import { StockService } from './stock.service';
 import { ProductResponse } from '../domain/dto/viewproduct.dto';
 import { Product } from '../domain/entities/product.entity';
 import { ProductDetail } from '../domain/entities/product-detail.entity';
-import { IMG_BASE, IMG_NOT_FOUND } from '../../shared/constants';
+import { UrlBaseService } from '../../shared/application/url-base.service';
+import { IMG_NOT_FOUND } from '../../shared/constants';
 
 @Injectable()
 export class ProductService {
+
+  private urlBaseImg: string;
+
   constructor(
     @InjectRepository(StockGc, "postgresConnection")
     private readonly stockGcRepository: Repository<StockGc>,
@@ -25,9 +24,14 @@ export class ProductService {
     private readonly productRepository: Repository<Product>,
     @InjectRepository(ProductDetail, "postgresConnection")
     private readonly productDetailRepository: Repository<ProductDetail>,
-    private readonly stockService: StockService,
+    private readonly urlBaseService: UrlBaseService
 
-  ) { }
+  ) {
+
+    const baseUrl = this.urlBaseService.urlBase();
+    this.urlBaseImg = `${baseUrl}/img`;
+    
+  }
 
   async getProducts(productFilterDto: ProductFilterDto): Promise<ProductResponse> {
 
@@ -66,11 +70,13 @@ export class ProductService {
       throw new NotFoundException(`no hay ningun producto`);
     }
 
+    // falabella-logo.jpg
+
     const products: Product[] = productRaw.map((product) => ({
       ...product,
-      thumbnail: product.thumbnail ? `${IMG_BASE}/${product.thumbnail}` : IMG_NOT_FOUND,
-      logo: `${IMG_BASE}/cencosud-logo.jpg`,
-      img: [`${IMG_BASE}/${product.thumbnail}`], // TODO Reemplaza 'aquí_tu_url' con la URL que desees agregar
+      thumbnail: product.thumbnail ? `${this.urlBaseImg}/${product.thumbnail}` : `${this.urlBaseImg}/${IMG_NOT_FOUND}`,
+      logo: `${this.urlBaseImg}/cencosud-logo.jpg`,
+      img: [`${this.urlBaseImg}/${product.thumbnail}`], // TODO Reemplaza 'aquí_tu_url' con la URL que desees agregar
     }));
 
     const response: ProductResponse = {
@@ -85,38 +91,38 @@ export class ProductService {
   // TODO , logo 
   async getProductsDetail(idProducto: number): Promise<ProductDetail> {
 
-    const  product = await this.productDetailRepository.findOneBy({
+    const product = await this.productDetailRepository.findOneBy({
       id: idProducto
     })
-    
+
     if (!product) {
       throw new NotFoundException(`no hay ningun producto`);
     }
 
     const productFormated: ProductDetail = {
       ...product,
-      thumbnail: product.thumbnail ? `${IMG_BASE}/${product.thumbnail}` : IMG_NOT_FOUND,
-      logo: `${IMG_BASE}/cencosud-logo.jpg`,
-      img: [`${IMG_BASE}/${product.thumbnail}`]
+      thumbnail: product.thumbnail ? `${this.urlBaseImg}/${product.thumbnail}` : `${this.urlBaseImg}/${IMG_NOT_FOUND}`,
+      logo: `${this.urlBaseImg}/cencosud-logo.jpg`,
+      img: [`${this.urlBaseImg}/${product.thumbnail}`]
     };
 
-    
+
     return productFormated
   }
 
   // TODO stock solo para GC, a futuro debe estar preparado para cualquier producto
 
   async getProductsStock(idProduct: number): Promise<number> {
-    const stock = await this.productRepository.findOneBy({id: idProduct})
+    const stock = await this.productRepository.findOneBy({ id: idProduct })
 
     if (!stock)
       throw new NotFoundException(`no hay ningun stock`)
     return stock.stock
   }
 
-  async discountStockProductByOne(idProducto: number): Promise<any>{
-    const product =  await this.productRepository.findOneBy({id:idProducto}) 
-    const productDetail =  await this.productDetailRepository.findOneBy({id:idProducto})    
+  async discountStockProductByOne(idProducto: number): Promise<any> {
+    const product = await this.productRepository.findOneBy({ id: idProducto })
+    const productDetail = await this.productDetailRepository.findOneBy({ id: idProducto })
     product.stock -= 1;
     productDetail.stock -= 1;
     await this.productRepository.save(product);
@@ -124,6 +130,12 @@ export class ProductService {
 
     return
   }
+
+  async getProductById(idProducto : number) : Promise<Product>{
+    return  await this.productRepository.findOneBy({ id: idProducto })
+  }
+
+
 
 
   setProductsStock(rebajaStockDto: RebajaStockDto): StockProductsType {

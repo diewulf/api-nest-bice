@@ -23,7 +23,7 @@ export interface RedeemDto {
 export interface RedeemResponse {
     status: EStatus;
     canje?: Redeem;
-    messagge?: string;
+    message?: string;
 }
 
 export interface codeGc {

@@ -11,12 +11,13 @@ import { Product } from '../domain/entities/product.entity';
 import { ProductDetail } from '../domain/entities/product-detail.entity';
 import { PrivateProductController } from './products-private.controller';
 import { ProductsPrivateService } from '../application/products-private.service';
+import { UrlBaseService } from '../../shared/application/url-base.service';
 
 
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([StockGc, Product, ProductDetail] , 'postgresConnection'),
+    TypeOrmModule.forFeature([StockGc, Product, ProductDetail], 'postgresConnection'),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
@@ -26,7 +27,7 @@ import { ProductsPrivateService } from '../application/products-private.service'
     })
 
   ],
-  providers: [ProductService, StockService, ProductsPrivateService],
-  controllers: [ProductsController,PrivateProductController],
+  providers: [ProductService, StockService, ProductsPrivateService, UrlBaseService],
+  controllers: [ProductsController, PrivateProductController],
 })
 export class ProductsModule { }

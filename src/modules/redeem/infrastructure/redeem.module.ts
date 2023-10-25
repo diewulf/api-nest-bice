@@ -9,9 +9,10 @@ import { Redeem } from '../domain/redeem.entity';
 import { StockService } from '../../product/application/stock.service';
 import { StockGc } from '../../product/domain/entities/stock-gc.entity';
 import { Product } from '../../product/domain/entities/product.entity';
-import { RedeemCreate } from '../application/redem-create';
 import { ProductService } from '../../product/application/products.service';
 import { ProductDetail } from '../../product/domain/entities/product-detail.entity';
+import { UrlBaseService } from '../../shared/application/url-base.service';
+import { RedeemCreateService } from '../application/redem-create.service';
 
 
 
@@ -31,8 +32,9 @@ import { ProductDetail } from '../../product/domain/entities/product-detail.enti
   providers: [
     RedeemService,
     StockService,
-    RedeemCreate,
-    ProductService
+    RedeemCreateService,
+    ProductService,
+    UrlBaseService
   ],
 })
 export class RedeemModule { }

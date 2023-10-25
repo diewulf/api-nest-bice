@@ -1,26 +1,27 @@
-import { Controller, Get, Res } from '@nestjs/common';
-import { PdfService } from '../application/pdfhtml.service';
+import { Controller, Get, Res, Param } from '@nestjs/common';
+import { PdfService } from '../application/pdf.service';
 import { Response } from 'express';
-
-@Controller('pdf')
+@Controller('url')
 export class PdfController {
-  constructor(  private readonly pdfService: PdfService) { }
+  constructor(
+    private readonly pdfService: PdfService,
+  ) { }
 
-  @Get()
-  async generatePdf(@Res() res: Response): Promise<any> {
-   
-
+  @Get('pdf/:uuid')
+  async generatePdf(@Param('uuid') uuid, @Res() res: Response){
     try {
 
-      const pdfBuffer = await this.pdfService.generatePdf();
-      res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', 'inline'); // Muestra el PDF en línea en el navegador
-      res.setHeader('Content-Length', pdfBuffer.length.toString());
-      res.send(pdfBuffer);
+      const pdfBuffer = await this.pdfService.fallabellaVoucherPdf(uuid);
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': 'inline',
+        'Content-Length': pdfBuffer.length,
+      })
+      res.end(pdfBuffer);
     } catch (error) {
       res.status(500).send(error.message);
     }
-     
 
   }
+
 }

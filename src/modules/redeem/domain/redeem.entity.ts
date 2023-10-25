@@ -1,15 +1,20 @@
 
-import { EGc } from '../../product/domain/entities/stock-gc.entity';
+import { GcEnum } from '../../product/domain/entities/stock-gc.entity';
 import { Base } from '../../shared/domain/Base';
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, Generated } from 'typeorm';
 
 export interface ProductsDetail {
   id_producto: number;
-  tipo_gc?: EGc;
+  tipo_gc?: GcEnum;
   clave?: string;
   n_tarjeta?: string;
   url_cupon?: string;
   nombre_producto?: string;
+  monto?: number;
+  gc_tottus?: string;
+  falabella_sodimac?: string;
+  fecha_vencimiento?: Date;
+  cod_seguridad?: string;
 }
 
 
@@ -22,8 +27,11 @@ interface DispatchDetail {
 @Entity({ name: 'canje' })
 export class Redeem extends Base {
 
-  @Column()
+  @Column({name : "rut_cliente"})
   rut_cliente: string;
+
+  @Column()
+  uuid: string;
 
   @Column()
   correo: string;

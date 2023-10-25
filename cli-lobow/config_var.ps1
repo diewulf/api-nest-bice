@@ -8,6 +8,7 @@ $YAML_DEV = "../app.yaml"
 $VERSION_APP_ENGINE_DEFAULT_PROD = "20230824t151309"
 $YAML_PROD = "../app-prod.yaml"
 
+# gcloud app deploy .\app-prod.yaml --version=20230824t151309 --promote
 $banner = @"
        .__  .__  .__        ___.                  
   ____ |  | |__| |  |   ____\_ |__   ______  _  __

@@ -9,6 +9,21 @@ export class StockGc {
   @Column()
   id_producto: number;
 
+  @Column({name: 'gc_tottus' , nullable: true})
+  gc_tottus?: string;
+
+  @Column({name: 'falabella_sodimac' , nullable: true})
+  falabella_sodimac?: string;
+
+  @Column({name: 'fecha_vencimiento', type: 'date' , nullable: true })
+  fecha_vencimiento?: Date;
+
+  @Column({ nullable: true })
+  monto?: number;
+
+  @Column({ nullable: true, name: "cod_seguridad" })
+  cod_seguridad?: string;
+
   @Column({ nullable: true })
   cuenta?: string;
 
@@ -31,7 +46,7 @@ export class StockGc {
   rut_cliente?: string;
 
   @Column()
-  tipo_gc: EGc;
+  tipo_gc: GcEnum;
 
   @Column({ type: 'text', nullable: true })
   url_cupon?: string;
@@ -40,7 +55,7 @@ export class StockGc {
 }
 
 
-export enum EGc {
+export enum GcEnum {
   CENCOSUD = "CENCOSUD",
   FALLABELLA = "FALLABELLA"
 }

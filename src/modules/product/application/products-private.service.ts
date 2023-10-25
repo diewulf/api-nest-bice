@@ -18,7 +18,12 @@ export class ProductsPrivateService {
       cuenta,
       ean13,
       id_producto,
-      tipo_gc
+      tipo_gc,
+      cod_seguridad,
+      falabella_sodimac,
+      fecha_vencimiento,
+      gc_tottus,
+      monto
     } = createGcInDto
       
 
@@ -29,7 +34,11 @@ export class ProductsPrivateService {
       fecha_carga: new Date(),
       id_producto,
       tipo_gc,
-
+      cod_seguridad,
+      falabella_sodimac,
+      fecha_vencimiento,
+      gc_tottus,
+      monto
     })
     this.stockGcRepository.save(stock)
     return

@@ -8,8 +8,8 @@ export class Product {
   id: number;
   @Column({ nullable: true })
   nombre?: string;
-  @Column({ nullable: true })
-  descripcion?: string;
+  @Column({ type: "text"})
+  descripcion: string;
   @Column({ nullable: true })
   precio?: number;
   @Column({ nullable: true })

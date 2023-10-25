@@ -22,7 +22,7 @@ export class StockService {
     return stock
   }
 
-  async assignRutGcByOne(idGcProduct: number, rutClient: string): Promise<StockGc> {
+  async assignRutGcByRut(idGcProduct: number, rutClient: string): Promise<StockGc> {
 
     const stock = await this.stockGcRepository.findOneBy({
       id: idGcProduct

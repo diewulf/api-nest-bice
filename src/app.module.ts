@@ -11,7 +11,10 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ProductTransferMyModule } from './modules/product-transfer/insfrastrructure/products-transfer.module';
 import { PdfController } from './modules/shared/infrastructure/pdf.controller';
-import { PdfService } from './modules/shared/application/pdfhtml.service';
+import { PdfService } from './modules/shared/application/pdf.service';
+import { BarCodeService } from './modules/shared/application/barcode.service';
+import { RedeemService } from './modules/redeem/application/redeem.service';
+import { SharedModule } from './modules/shared/infrastructure/shared.module';
 
 console.log(join(__dirname, '..', 'client'))
 
@@ -31,6 +34,7 @@ if (process.env.NODE_ENV === 'local') {
 @Module({
 
   imports: [
+    SharedModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client'),
       exclude: ['/api/(.*)'],
@@ -48,16 +52,13 @@ if (process.env.NODE_ENV === 'local') {
       envFilePath: process.env.NODE_ENV === 'production' ? '.env.prod' : '.env', // .env seria tu local que se conecta al de test
       isGlobal: true,
     }),
-
     TypeOrmModule.forRootAsync({
       name: 'postgresConnection',
       useFactory: postgreSqlConfig,
       inject: [ConfigService],
     }),
-
   ],
-  controllers: [PdfController],
-  providers: [PdfService]
+
 })
 
 

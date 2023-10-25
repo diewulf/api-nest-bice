@@ -20,8 +20,8 @@ export class ProductDetail {
   stock?: number;
   @Column({ nullable: true })
   proveedor?: string;
-  @Column({ nullable: true })
-  descripcion?: string;
+  @Column({ type: "text" })
+  descripcion: string;
   @Column({ nullable: true })
   marca?: string;
   @Column({ nullable: true })
