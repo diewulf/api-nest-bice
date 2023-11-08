@@ -1,21 +1,21 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Base } from '../../../shared/domain/Base';
 
 @Entity({ name: 'stockgc' })
-export class StockGc {
-  
-  @PrimaryGeneratedColumn()
-  id: number;
+export class StockGc extends Base {
+
+
 
   @Column()
   id_producto: number;
 
-  @Column({name: 'gc_tottus' , nullable: true})
+  @Column({ name: 'gc_tottus', nullable: true })
   gc_tottus?: string;
 
-  @Column({name: 'falabella_sodimac' , nullable: true})
+  @Column({ name: 'falabella_sodimac', nullable: true })
   falabella_sodimac?: string;
 
-  @Column({name: 'fecha_vencimiento', type: 'date' , nullable: true })
+  @Column({ name: 'fecha_vencimiento', type: 'date', nullable: true })
   fecha_vencimiento?: Date;
 
   @Column({ nullable: true })
@@ -57,11 +57,11 @@ export class StockGc {
 
 export enum GcEnum {
   CENCOSUD = "CENCOSUD",
-  FALLABELLA = "FALLABELLA"
+  FALABELLA = "FALABELLA"
 }
 
 export enum TipoBeneficioEnum {
   COPAGO = "COPAGO",
   EXCLUSIVO = "EXCLUSIVO",
-  ADICIONALES= "ADICIONALES"
+  ADICIONALES = "ADICIONALES"
 }

@@ -10,8 +10,9 @@ export class PrivateProductController {
   ) { }
   
   // inserta stock GC
-  @Post()
-  async addProducts(@Body() createGcInDto: CreateGcInDto): Promise<any> {
+  @Post("add-stock")
+  async addProducts(@Body() createGcInDto: CreateGcInDto[]): Promise<any> {
+    //console.log(createGcInDto)
     return this.productsPrivateService.addProduct(createGcInDto)
   }
 

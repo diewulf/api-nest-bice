@@ -72,12 +72,16 @@ export class ProductService {
 
     // falabella-logo.jpg
 
-    const products: Product[] = productRaw.map((product) => ({
-      ...product,
-      thumbnail: product.thumbnail ? `${this.urlBaseImg}/${product.thumbnail}` : `${this.urlBaseImg}/${IMG_NOT_FOUND}`,
-      logo: `${this.urlBaseImg}/cencosud-logo.jpg`,
-      img: [`${this.urlBaseImg}/${product.thumbnail}`], // TODO Reemplaza 'aquí_tu_url' con la URL que desees agregar
-    }));
+    const products: Product[] = productRaw.map((product) => {
+      const isFalabella = product.marca && product.marca.toLowerCase().includes('falabella');
+      const logoFileName = isFalabella ? 'falabella-logo.jpg' : 'cencosud-logo.jpg';    
+      return {
+        ...product,
+        thumbnail: product.thumbnail ? `${this.urlBaseImg}/${product.thumbnail}` : `${this.urlBaseImg}/${IMG_NOT_FOUND}`,
+        logo: `${this.urlBaseImg}/${logoFileName}`,
+        img: [`${this.urlBaseImg}/${product.thumbnail}`], // TODO Reemplaza 'aquí_tu_url' con la URL que desees agregar
+      };
+    });
 
     const response: ProductResponse = {
       products,
@@ -99,10 +103,13 @@ export class ProductService {
       throw new NotFoundException(`no hay ningun producto`);
     }
 
+    const isFalabella = product.marca && product.marca.toLowerCase().includes('falabella');
+    const logoFileName = isFalabella ? 'falabella-logo.jpg' : 'cencosud-logo.jpg';  
+
     const productFormated: ProductDetail = {
       ...product,
       thumbnail: product.thumbnail ? `${this.urlBaseImg}/${product.thumbnail}` : `${this.urlBaseImg}/${IMG_NOT_FOUND}`,
-      logo: `${this.urlBaseImg}/cencosud-logo.jpg`,
+      logo: `${this.urlBaseImg}/${logoFileName}`,
       img: [`${this.urlBaseImg}/${product.thumbnail}`]
     };
 

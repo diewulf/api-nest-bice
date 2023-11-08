@@ -35,7 +35,7 @@ export class RedeemCreateService {
     return redeemStored
   }
 
-  
+
   // TODO simplificar el redeem, single responsability! de momento es un canje a gc pero debe convulsionar 
   // para cualquier tipo de producto
   async doRedeem(redeemDto: RedeemDto): Promise<RedeemResponse> {
@@ -44,6 +44,8 @@ export class RedeemCreateService {
     const { idProducto } = ProductoDetalle
     const uuidCode = uuid()
     let url_cupon
+    let n_tarjeta
+    let clave
 
     const gcStock = await this.stockService.knowFreeGcByOne(idProducto)
 
@@ -53,8 +55,12 @@ export class RedeemCreateService {
 
     if (gcStock.tipo_gc === GcEnum.CENCOSUD) { // si es cenco lo obtengo de stockgc
       url_cupon = gcStock.url_cupon
-    } else if (gcStock.tipo_gc === GcEnum.FALLABELLA) { // si es falabella se construye y se inserta en canje
+      n_tarjeta = gcStock.cuenta
+      clave = gcStock.clave
+    } else if (gcStock.tipo_gc === GcEnum.FALABELLA) { // si es falabella se construye y se inserta en canje
       url_cupon = this.urlBaseService.urlFalabellaByUuid(uuidCode)
+      n_tarjeta = gcStock.falabella_sodimac
+      clave = gcStock.cod_seguridad
     }
 
     const product = await this.productService.getProductById(idProducto)
@@ -70,8 +76,8 @@ export class RedeemCreateService {
       datos_productos: {
         id_producto: idProducto,
         nombre_producto: product.nombre,
-        clave: gcStock.clave,
-        n_tarjeta: gcStock.cuenta,
+        clave: clave,
+        n_tarjeta: n_tarjeta,
         tipo_gc: gcStock.tipo_gc,
         url_cupon: url_cupon,
         monto: gcStock.monto,

@@ -4,7 +4,7 @@ export class Base {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, default: () => "CURRENT_TIMESTAMP" })
     createdAt?: Date;
 
     @Column({ nullable: true })

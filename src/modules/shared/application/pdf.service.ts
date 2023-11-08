@@ -31,7 +31,10 @@ export class PdfService {
     const storedRedeem = await  this.redeemService.getRedeemByUuid(uuid)
     const productsDetail: ProductsDetail = storedRedeem.datos_productos
     const dateExpired = productsDetail.fecha_vencimiento
-    const amount = productsDetail.monto
+    const amount = productsDetail.monto.toLocaleString('es-CL', {
+      style: 'currency',
+      currency: 'CLP'
+  });
     const clientName = storedRedeem.nombre_cliente.toUpperCase()
     const gcNumber = productsDetail.falabella_sodimac
     
@@ -57,7 +60,7 @@ export class PdfService {
 
       doc.moveDown();
       doc.moveDown();
-      doc.fontSize(18).font('Helvetica-Bold').text(`HAS RECIBIDO UNA GIFT CARD DE $ ${amount}`, { width: 700 }, 150, 100)
+      doc.fontSize(18).font('Helvetica-Bold').text(`HAS RECIBIDO UNA GIFT CARD DE ${amount}`, { width: 700 }, 150, 100)
       doc.fontSize(16).font('Helvetica-Bold').text(`VALIDEZ: hasta ${dateExpired}`, { width: 700 })
 
       doc.fontSize(16).font('Helvetica-BoldOblique').text(`ÚSALA EN`, { width: 700 }, 240, 0)
