@@ -20,7 +20,7 @@ export class ProductsPrivateService {
 
       // if exist stock from createGcInDto
       if (dto.tipo_gc == GcEnum.CENCOSUD) {
-        const existStock = this.stockGcRepository.findOneBy({
+        const existStock = await this.stockGcRepository.findOneBy({
           cuenta: dto.cuenta,
         })
         if (existStock) {
@@ -40,7 +40,7 @@ export class ProductsPrivateService {
           console.log("existe FALLABELLA este compadre");
 
         } else {
-          const stock = this.stockGcRepository.create(dto);
+          const stock = await this.stockGcRepository.create(dto);
           this.stockGcRepository.save(stock);
         }
       }
