@@ -28,16 +28,16 @@ export class PdfService {
 
   async fallabellaVoucherPdf(uuid: string): Promise<Buffer> {
 
-    const storedRedeem = await  this.redeemService.getRedeemByUuid(uuid)
+    const storedRedeem = await this.redeemService.getRedeemByUuid(uuid)
     const productsDetail: ProductsDetail = storedRedeem.datos_productos
     const dateExpired = productsDetail.fecha_vencimiento
     const amount = productsDetail.monto.toLocaleString('es-CL', {
       style: 'currency',
       currency: 'CLP'
-  });
+    });
     const clientName = storedRedeem.nombre_cliente.toUpperCase()
-    const gcNumber = productsDetail.falabella_sodimac
-    
+    const gcNumberTottus = productsDetail.gc_tottus
+
     const securityCod = productsDetail.cod_seguridad
 
     const barCodeDtoFalla: BarCodeDto = this.createBarCodeDto(productsDetail.falabella_sodimac);
@@ -66,7 +66,7 @@ export class PdfService {
       doc.fontSize(16).font('Helvetica-BoldOblique').text(`ÚSALA EN`, { width: 700 }, 240, 0)
 
 
-      doc.fontSize(14).font('Helvetica-Bold').text(`                          ${gcNumber}                                                       ${securityCod} `, { width: 700 }, 515, 200)
+      doc.fontSize(14).font('Helvetica-Bold').text(`                          ${gcNumberTottus}                                             ${securityCod} `, { width: 700 }, 515, 200)
 
       doc.fontSize(18).font('Helvetica-Bold').text(`DIRECCIÓN`, { width: 700 }, 570, 0)
       doc.fontSize(14).font('Helvetica').text(`Uso en Falabella, Sodimac, Tottus y Falabella.com *`, { width: 700 }, 600, 0)
